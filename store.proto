@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message Request {
+    string operation = 1;
+    string stage = 2;
+}
+
+message Response {
+    string data = 1;
+}
+
+service GetSet {
+    rpc operation(Request) returns (Response) {}
+}

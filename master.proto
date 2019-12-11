@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+message ping_request {
+    string data = 1;
+}
+
+message ping_response {
+    string data = 1;
+}
+
+message final_response {
+    string data = 1;
+}
+
+message address {
+    string name = 1;
+    string ip = 2;
+    int32 port = 3;
+}
+
+message request {
+    repeated address workers = 1;
+    address store = 2;
+    string map_f = 3;
+    string reduce_f = 4;
+}
+
+service Master {
+
+    rpc ping_master(ping_request) returns (ping_response) {}
+    rpc run_map_reduce(request) returns (final_response) {}
+}
