@@ -19,6 +19,11 @@ class WorkerStub(object):
         request_serializer=worker__pb2.mapper_request.SerializeToString,
         response_deserializer=worker__pb2.mapper_response.FromString,
         )
+    self.connect_to_store = channel.unary_unary(
+        '/Worker/connect_to_store',
+        request_serializer=worker__pb2.address2.SerializeToString,
+        response_deserializer=worker__pb2.connection_response.FromString,
+        )
     self.worker_reducer = channel.unary_unary(
         '/Worker/worker_reducer',
         request_serializer=worker__pb2.reducer_request.SerializeToString,
@@ -31,6 +36,13 @@ class WorkerServicer(object):
   pass
 
   def worker_map(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def connect_to_store(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -51,6 +63,11 @@ def add_WorkerServicer_to_server(servicer, server):
           servicer.worker_map,
           request_deserializer=worker__pb2.mapper_request.FromString,
           response_serializer=worker__pb2.mapper_response.SerializeToString,
+      ),
+      'connect_to_store': grpc.unary_unary_rpc_method_handler(
+          servicer.connect_to_store,
+          request_deserializer=worker__pb2.address2.FromString,
+          response_serializer=worker__pb2.connection_response.SerializeToString,
       ),
       'worker_reducer': grpc.unary_unary_rpc_method_handler(
           servicer.worker_reducer,

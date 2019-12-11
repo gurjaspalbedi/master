@@ -40,7 +40,6 @@ class MasterServicer(master_pb2_grpc.MasterServicer):
         log.write("STARTING MAP REDUCE AT MASTER")
         response = master_pb2.final_response()
         response.data = "1"
-        print(request.store)
         run(request.workers, request.store, request.map_f, request.reduce_f, request.path)
         return response
 
@@ -61,21 +60,22 @@ def connect_datastore(address):
     log.write(f'Master channel established with the store at {address.ip}:{address.port}', 'debug')
 
 
-def connect_worker(ip, port):
+def connect_worker(ip, port, store_address):
     global worker_stubs
     channel = grpc.insecure_channel(f'{ip}:{port}')
     worker_stub =  worker_pb2_grpc.WorkerStub(channel)
+    worker_stub.connect_to_store(store_address)
     worker_stubs.append(worker_stub)
     log.write(f'Master connected to worker at {ip}:{port}', 'debug')
     
 def command_to_store(value, stage = INITIAL_STAGE):
-    log.write('Making RPC call to store')
+    # log.write('Making RPC call to store')
     global store_stub
     request = store_pb2.Request()
     request.operation = value
     request.stage = stage 
     response = store_stub.operation(request)
-    log.write('Returning from command_to_store')
+    # log.write('Returning from command_to_store')
     return response.data
 
 def serve(port):
@@ -105,7 +105,7 @@ def ping_server(port, ip="127.0.0.1"):
         log.write(f"Unable to ping to {ip}:{port}")
 
 def save_initial_data(key, data):
-    log.write(f"SAVE INITIAL DATA: Trying to store initial data from mapper {key}")
+    # log.write(f"SAVE INITIAL DATA: Trying to store initial data from mapper {key}")
 
     command_to_store(f"set {key} {data}", INITIAL_STAGE)
 
@@ -149,7 +149,6 @@ def convert_to_proto_format(list_of_tuples):
 
     response_list = []
     tup = worker_pb2.tuple()
-    print(list_of_tuples)
     for key,value in list_of_tuples:
         tup = worker_pb2.tuple()
         tup.key = key
@@ -165,12 +164,13 @@ def run_map_red(cluster_id, map_func, reduce_func, path):
 
 def create_mapper_data(path, cluster_id=0):
 
-    log.write(f'Reading from path {path}', 'infl')
+    log.write(f'Reading from path {path}', 'info')
     if os.path.isfile(path):
         files = [path]
     else:
         files =  [f"{path}/{file_name}" for file_name in os.listdir(path)]
     task_count = 0
+    
     for file in files:
         with open(file, "r") as f:
             not_done = True
@@ -178,10 +178,13 @@ def create_mapper_data(path, cluster_id=0):
                 line = f.readlines(10)
                 if len(line) > 0:
                     save_initial_data(f'{cluster_id}:mapper:{task_count}', (file, line))
+                    
                     task_count += 1
                 else:
                     not_done = False
         return task_count
+
+    # log.write('MAP TASK COMLETE2', 'critical')
 
 def run_reduce(cluster_id, task_count, map_func, reduce_func):
     global worker_stubs
@@ -203,25 +206,24 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path):
     global worker_stubs
     log.write("Dividing data in chunks- START") 
     tasks_count = create_mapper_data(path, cluster_id)
-    
     data_list = []
+    
     for i in range(tasks_count):
         task_key = f'{cluster_id}:mapper:{i}'
 
         file_name, data = ast.literal_eval(command_to_store(f'get {task_key}'))
+        
+
         request = worker_pb2.mapper_request()
         request.file_name = file_name
         request.map_function = map_func
+        
         request.lines.extend(data)
-
         random_worker = random.randint(0,1)
-        
         response = worker_stubs[random_worker].worker_map(request)
-        
         result = list(response.result)
         command_to_store(f'set {cluster_id}:reducer:{i} {result}', INTERMEDIATE_STAGE)
         data_list.append(result)
-    
     task_count = combined_for_reducer(data_list, cluster_id)
     
     run_reduce(cluster_id, task_count, map_func, reduce_func)
@@ -232,8 +234,10 @@ def run(worker_addresses, store_address, map_func, reduce_func, path):
     global store_stub
     connect_datastore(store_address)
     for item in worker_addresses:
-        connect_worker(item.ip, item.port)
-    run_map_red(0, map_func, reduce_func, path )
+        connect_worker(item.ip, item.port, store_address)
+
+    print('here', 'critical')
+    run_map_red(0, map_func, reduce_func, path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Worker for the map reduce')

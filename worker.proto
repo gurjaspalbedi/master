@@ -19,6 +19,16 @@ message mapper_response {
     repeated tuple result = 1;
 }
 
+message address2 {
+    string name = 1;
+    string ip = 2;
+    int32 port = 3;
+}
+
+message connection_response {
+    string data = 1;
+}
+
 message reducer_response {
     repeated tuple result = 1;
 }
@@ -31,5 +41,6 @@ message reducer_request {
 service Worker {
 
     rpc worker_map(mapper_request) returns (mapper_response) {}
+    rpc connect_to_store(address2) returns (connection_response) {}
     rpc worker_reducer(reducer_request) returns (reducer_response) {}
 }

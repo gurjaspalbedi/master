@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0cworker.proto\"H\n\x0emapper_request\x12\x11\n\tfile_name\x18\x01 \x01(\t\x12\r\n\x05lines\x18\x02 \x03(\t\x12\x14\n\x0cmap_function\x18\x03 \x01(\t\"#\n\x05tuple\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"$\n\ntuple_list\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\")\n\x0fmapper_response\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\"*\n\x10reducer_response\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\"C\n\x0freducer_request\x12\x18\n\x10reducer_function\x18\x01 \x01(\t\x12\x16\n\x06result\x18\x02 \x03(\x0b\x32\x06.tuple2t\n\x06Worker\x12\x31\n\nworker_map\x12\x0f.mapper_request\x1a\x10.mapper_response\"\x00\x12\x37\n\x0eworker_reducer\x12\x10.reducer_request\x1a\x11.reducer_response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0cworker.proto\"H\n\x0emapper_request\x12\x11\n\tfile_name\x18\x01 \x01(\t\x12\r\n\x05lines\x18\x02 \x03(\t\x12\x14\n\x0cmap_function\x18\x03 \x01(\t\"#\n\x05tuple\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"$\n\ntuple_list\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\")\n\x0fmapper_response\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\"2\n\x08\x61\x64\x64ress2\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"#\n\x13\x63onnection_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"*\n\x10reducer_response\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\"C\n\x0freducer_request\x12\x18\n\x10reducer_function\x18\x01 \x01(\t\x12\x16\n\x06result\x18\x02 \x03(\x0b\x32\x06.tuple2\xab\x01\n\x06Worker\x12\x31\n\nworker_map\x12\x0f.mapper_request\x1a\x10.mapper_response\"\x00\x12\x35\n\x10\x63onnect_to_store\x12\t.address2\x1a\x14.connection_response\"\x00\x12\x37\n\x0eworker_reducer\x12\x10.reducer_request\x1a\x11.reducer_response\"\x00\x62\x06proto3')
 )
 
 
@@ -171,6 +171,82 @@ _MAPPER_RESPONSE = _descriptor.Descriptor(
 )
 
 
+_ADDRESS2 = _descriptor.Descriptor(
+  name='address2',
+  full_name='address2',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='address2.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ip', full_name='address2.ip', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='port', full_name='address2.port', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=208,
+  serialized_end=258,
+)
+
+
+_CONNECTION_RESPONSE = _descriptor.Descriptor(
+  name='connection_response',
+  full_name='connection_response',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data', full_name='connection_response.data', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=260,
+  serialized_end=295,
+)
+
+
 _REDUCER_RESPONSE = _descriptor.Descriptor(
   name='reducer_response',
   full_name='reducer_response',
@@ -197,8 +273,8 @@ _REDUCER_RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=208,
-  serialized_end=250,
+  serialized_start=297,
+  serialized_end=339,
 )
 
 
@@ -235,8 +311,8 @@ _REDUCER_REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=252,
-  serialized_end=319,
+  serialized_start=341,
+  serialized_end=408,
 )
 
 _TUPLE_LIST.fields_by_name['result'].message_type = _TUPLE
@@ -247,6 +323,8 @@ DESCRIPTOR.message_types_by_name['mapper_request'] = _MAPPER_REQUEST
 DESCRIPTOR.message_types_by_name['tuple'] = _TUPLE
 DESCRIPTOR.message_types_by_name['tuple_list'] = _TUPLE_LIST
 DESCRIPTOR.message_types_by_name['mapper_response'] = _MAPPER_RESPONSE
+DESCRIPTOR.message_types_by_name['address2'] = _ADDRESS2
+DESCRIPTOR.message_types_by_name['connection_response'] = _CONNECTION_RESPONSE
 DESCRIPTOR.message_types_by_name['reducer_response'] = _REDUCER_RESPONSE
 DESCRIPTOR.message_types_by_name['reducer_request'] = _REDUCER_REQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -279,6 +357,20 @@ mapper_response = _reflection.GeneratedProtocolMessageType('mapper_response', (_
   })
 _sym_db.RegisterMessage(mapper_response)
 
+address2 = _reflection.GeneratedProtocolMessageType('address2', (_message.Message,), {
+  'DESCRIPTOR' : _ADDRESS2,
+  '__module__' : 'worker_pb2'
+  # @@protoc_insertion_point(class_scope:address2)
+  })
+_sym_db.RegisterMessage(address2)
+
+connection_response = _reflection.GeneratedProtocolMessageType('connection_response', (_message.Message,), {
+  'DESCRIPTOR' : _CONNECTION_RESPONSE,
+  '__module__' : 'worker_pb2'
+  # @@protoc_insertion_point(class_scope:connection_response)
+  })
+_sym_db.RegisterMessage(connection_response)
+
 reducer_response = _reflection.GeneratedProtocolMessageType('reducer_response', (_message.Message,), {
   'DESCRIPTOR' : _REDUCER_RESPONSE,
   '__module__' : 'worker_pb2'
@@ -301,8 +393,8 @@ _WORKER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=321,
-  serialized_end=437,
+  serialized_start=411,
+  serialized_end=582,
   methods=[
   _descriptor.MethodDescriptor(
     name='worker_map',
@@ -314,9 +406,18 @@ _WORKER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='connect_to_store',
+    full_name='Worker.connect_to_store',
+    index=1,
+    containing_service=None,
+    input_type=_ADDRESS2,
+    output_type=_CONNECTION_RESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='worker_reducer',
     full_name='Worker.worker_reducer',
-    index=1,
+    index=2,
     containing_service=None,
     input_type=_REDUCER_REQUEST,
     output_type=_REDUCER_RESPONSE,
