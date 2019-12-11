@@ -40,6 +40,7 @@ class MasterServicer(master_pb2_grpc.MasterServicer):
         log.write("STARTING MAP REDUCE AT MASTER")
         response = master_pb2.final_response()
         response.data = "1"
+        print(request.store)
         run(request.workers, request.store, request.map_f, request.reduce_f, request.path)
         return response
 
@@ -53,11 +54,11 @@ worker_stubs = []
 store_stub = None
 
 
-def connect_datastore():
+def connect_datastore(address):
     global store_stub
-    channel = grpc.insecure_channel(f'127.0.0.1:{DATA_STORE_PORT}')
+    channel = grpc.insecure_channel(f'{address.ip}:{address.port}')
     store_stub =  store_pb2_grpc.GetSetStub(channel)
-    log.write('Master channel established with the store', 'debug')
+    log.write(f'Master channel established with the store at {address.ip}:{address.port}', 'debug')
 
 
 def connect_worker(ip, port):
@@ -229,7 +230,7 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path):
 def run(worker_addresses, store_address, map_func, reduce_func, path):
     
     global store_stub
-    connect_datastore()
+    connect_datastore(store_address)
     for item in worker_addresses:
         connect_worker(item.ip, item.port)
     run_map_red(0, map_func, reduce_func, path )
