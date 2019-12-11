@@ -79,7 +79,7 @@ def command_to_store(value, stage = INITIAL_STAGE):
     return response.data
 
 def serve(port):
-
+    time.sleep(20)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     master_pb2_grpc.add_MasterServicer_to_server(MasterServicer(), server)
 
