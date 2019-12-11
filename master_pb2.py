@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0cmaster.proto\"\x1c\n\x0cping_request\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1d\n\rping_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1e\n\x0e\x66inal_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"1\n\x07\x61\x64\x64ress\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"^\n\x07request\x12\x19\n\x07workers\x18\x01 \x03(\x0b\x32\x08.address\x12\x17\n\x05store\x18\x02 \x01(\x0b\x32\x08.address\x12\r\n\x05map_f\x18\x03 \x01(\t\x12\x10\n\x08reduce_f\x18\x04 \x01(\t2g\n\x06Master\x12.\n\x0bping_master\x12\r.ping_request\x1a\x0e.ping_response\"\x00\x12-\n\x0erun_map_reduce\x12\x08.request\x1a\x0f.final_response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0cmaster.proto\"\x1c\n\x0cping_request\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1d\n\rping_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1e\n\x0e\x66inal_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"1\n\x07\x61\x64\x64ress\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"l\n\x07request\x12\x19\n\x07workers\x18\x01 \x03(\x0b\x32\x08.address\x12\x17\n\x05store\x18\x02 \x01(\x0b\x32\x08.address\x12\r\n\x05map_f\x18\x03 \x01(\t\x12\x10\n\x08reduce_f\x18\x04 \x01(\t\x12\x0c\n\x04path\x18\x05 \x01(\t2g\n\x06Master\x12.\n\x0bping_master\x12\r.ping_request\x1a\x0e.ping_response\"\x00\x12-\n\x0erun_map_reduce\x12\x08.request\x1a\x0f.final_response\"\x00\x62\x06proto3')
 )
 
 
@@ -199,6 +199,13 @@ _REQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='path', full_name='request.path', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -212,7 +219,7 @@ _REQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=160,
-  serialized_end=254,
+  serialized_end=268,
 )
 
 _REQUEST.fields_by_name['workers'].message_type = _ADDRESS
@@ -267,8 +274,8 @@ _MASTER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=256,
-  serialized_end=359,
+  serialized_start=270,
+  serialized_end=373,
   methods=[
   _descriptor.MethodDescriptor(
     name='ping_master',

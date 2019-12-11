@@ -23,6 +23,7 @@ message request {
     address store = 2;
     string map_f = 3;
     string reduce_f = 4;
+    string path = 5;
 }
 
 service Master {

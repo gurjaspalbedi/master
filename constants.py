@@ -18,9 +18,5 @@ INITIAL_STAGE = 'initial'
 INTERMEDIATE_STAGE = 'intermediate'
 FINAL_STAGE = 'final'
 
-
-TASK_WORD_COUNT = 'word_count'
-TASK_INVERTED_INDEX = 'inverted_index'
-
 DATA_STORE_PORT = 50151
 WORKER_PORTS = [50000, 50001]
