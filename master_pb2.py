@@ -13,6 +13,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+import worker_pb2 as worker__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -20,8 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0cmaster.proto\"\x1c\n\x0cping_request\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1d\n\rping_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1e\n\x0e\x66inal_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"1\n\x07\x61\x64\x64ress\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"l\n\x07request\x12\x19\n\x07workers\x18\x01 \x03(\x0b\x32\x08.address\x12\x17\n\x05store\x18\x02 \x01(\x0b\x32\x08.address\x12\r\n\x05map_f\x18\x03 \x01(\t\x12\x10\n\x08reduce_f\x18\x04 \x01(\t\x12\x0c\n\x04path\x18\x05 \x01(\t2g\n\x06Master\x12.\n\x0bping_master\x12\r.ping_request\x1a\x0e.ping_response\"\x00\x12-\n\x0erun_map_reduce\x12\x08.request\x1a\x0f.final_response\"\x00\x62\x06proto3')
-)
+  serialized_pb=_b('\n\x0cmaster.proto\x1a\x0cworker.proto\"\x1c\n\x0cping_request\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"\x1d\n\rping_response\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\"(\n\x0e\x66inal_response\x12\x16\n\x06result\x18\x01 \x03(\x0b\x32\x06.tuple\"1\n\x07\x61\x64\x64ress\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02ip\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\x05\"l\n\x07request\x12\x19\n\x07workers\x18\x01 \x03(\x0b\x32\x08.address\x12\x17\n\x05store\x18\x02 \x01(\x0b\x32\x08.address\x12\r\n\x05map_f\x18\x03 \x01(\t\x12\x10\n\x08reduce_f\x18\x04 \x01(\t\x12\x0c\n\x04path\x18\x05 \x01(\t2g\n\x06Master\x12.\n\x0bping_master\x12\r.ping_request\x1a\x0e.ping_response\"\x00\x12-\n\x0erun_map_reduce\x12\x08.request\x1a\x0f.final_response\"\x00\x62\x06proto3')
+  ,
+  dependencies=[worker__pb2.DESCRIPTOR,])
 
 
 
@@ -52,8 +54,8 @@ _PING_REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=16,
-  serialized_end=44,
+  serialized_start=30,
+  serialized_end=58,
 )
 
 
@@ -83,8 +85,8 @@ _PING_RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=46,
-  serialized_end=75,
+  serialized_start=60,
+  serialized_end=89,
 )
 
 
@@ -96,9 +98,9 @@ _FINAL_RESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='data', full_name='final_response.data', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      name='result', full_name='final_response.result', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -114,8 +116,8 @@ _FINAL_RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=77,
-  serialized_end=107,
+  serialized_start=91,
+  serialized_end=131,
 )
 
 
@@ -159,8 +161,8 @@ _ADDRESS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=109,
-  serialized_end=158,
+  serialized_start=133,
+  serialized_end=182,
 )
 
 
@@ -218,10 +220,11 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=160,
-  serialized_end=268,
+  serialized_start=184,
+  serialized_end=292,
 )
 
+_FINAL_RESPONSE.fields_by_name['result'].message_type = worker__pb2._TUPLE
 _REQUEST.fields_by_name['workers'].message_type = _ADDRESS
 _REQUEST.fields_by_name['store'].message_type = _ADDRESS
 DESCRIPTOR.message_types_by_name['ping_request'] = _PING_REQUEST
@@ -274,8 +277,8 @@ _MASTER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=270,
-  serialized_end=373,
+  serialized_start=294,
+  serialized_end=397,
   methods=[
   _descriptor.MethodDescriptor(
     name='ping_master',

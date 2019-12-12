@@ -38,11 +38,19 @@ class MasterServicer(master_pb2_grpc.MasterServicer):
 
     def run_map_reduce(self, request, context):
         log.write("STARTING MAP REDUCE AT MASTER")
-        response = master_pb2.final_response()
-        response.data = "1"
+        
         log.write('request to Master Servicer run_map_reduce')
         log.write(request)
-        run(request.workers, request.store, request.map_f, request.reduce_f, request.path)
+        response = master_pb2.final_response()
+        results = run(request.workers, request.store, request.map_f, request.reduce_f, request.path)
+        reponse_list = []
+        for item in results:
+            tup = worker_pb2.tuple()
+            tup.key = item[0].key
+            tup.value = item[0].value
+            reponse_list.append(tup)
+        response.result.extend(reponse_list)
+        print(response)
         return response
 
 log = Dependencies.log()
@@ -161,7 +169,9 @@ def convert_to_proto_format(list_of_tuples):
 
 def run_map_red(cluster_id, map_func, reduce_func, path, worker_addresses):
     log.write("Map reduce started")
-    run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses )
+    results = run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses )
+    return results
+
 
 
 def create_mapper_data(path, cluster_id=0):
@@ -191,20 +201,28 @@ def create_mapper_data(path, cluster_id=0):
 def run_reduce(cluster_id, task_count, map_func, reduce_func):
     global worker_stubs
     log.write(f'starting run reduce with task count {task_count}')
+    results = []
     for i in range(task_count):
         key = f'{cluster_id}:combiner:{i}'
         get_data = ast.literal_eval(command_to_store(f'get {key}', INTERMEDIATE_STAGE))
 
         request = worker_pb2.reducer_request()
         request.reducer_function = reduce_func
-
+        # print('get data')
+        # print(get_data)
         request.result.extend(convert_to_proto_format(get_data))
         log.write(f'run reduce worker_stubs count {len(worker_stubs)}')
         result = worker_stubs[0].worker_reducer(request)
         key = f'{cluster_id}:final:{i}'
         save_final_data(key, result.result)
+        # print('result in here')
+        # print(result)
+        results.append(result.result)
         log.write('run reduce complete')
-        print(result)
+    print('results3')
+    print(results)
+    return results
+        
 
 def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
     global worker_stubs
@@ -230,9 +248,11 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
         result = list(response.result)
         command_to_store(f'set {cluster_id}:reducer:{i} {result}', INTERMEDIATE_STAGE)
         data_list.append(result)
+
     task_count = combined_for_reducer(data_list, cluster_id)
     log.write('Run map chunks complete')
-    run_reduce(cluster_id, task_count, map_func, reduce_func)
+    results = run_reduce(cluster_id, task_count, map_func, reduce_func)
+    return results
 
 
 def run(worker_addresses, store_address, map_func, reduce_func, path):
@@ -242,7 +262,8 @@ def run(worker_addresses, store_address, map_func, reduce_func, path):
     for item in worker_addresses:
         connect_worker(item.ip, item.port, store_address)
 
-    run_map_red(0, map_func, reduce_func, path, worker_addresses)
+    results = run_map_red(0, map_func, reduce_func, path, worker_addresses)
+    return results
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Worker for the map reduce')

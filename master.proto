@@ -1,4 +1,6 @@
 syntax = "proto3";
+import "worker.proto";
+
 
 message ping_request {
     string data = 1;
@@ -8,8 +10,13 @@ message ping_response {
     string data = 1;
 }
 
+// message tuple {
+//     string key = 1;
+//     string value = 2;
+// }
+
 message final_response {
-    string data = 1;
+    repeated tuple result = 1;
 }
 
 message address {
