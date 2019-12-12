@@ -188,18 +188,20 @@ def create_mapper_data(path, cluster_id=0):
 
 def run_reduce(cluster_id, task_count, map_func, reduce_func):
     global worker_stubs
+    log.write(f'starting run reduce with task count {task_count}')
     for i in range(task_count):
         key = f'{cluster_id}:combiner:{i}'
-        print('gettign data for the key', key)
         get_data = ast.literal_eval(command_to_store(f'get {key}', INTERMEDIATE_STAGE))
 
         request = worker_pb2.reducer_request()
         request.reducer_function = reduce_func
 
         request.result.extend(convert_to_proto_format(get_data))
+        log.write(f'run reduce worker_stubs count {len(worker_stubs)}')
         result = worker_stubs[0].worker_reducer(request)
         key = f'{cluster_id}:final:{i}'
         save_final_data(key, result.result)
+        log.write('run reduce complete')
         print(result)
 
 def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
@@ -227,7 +229,7 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
         command_to_store(f'set {cluster_id}:reducer:{i} {result}', INTERMEDIATE_STAGE)
         data_list.append(result)
     task_count = combined_for_reducer(data_list, cluster_id)
-    
+    log.write('Run map chunks complete')
     run_reduce(cluster_id, task_count, map_func, reduce_func)
 
 
