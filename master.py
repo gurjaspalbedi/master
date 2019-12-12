@@ -157,9 +157,9 @@ def convert_to_proto_format(list_of_tuples):
     return response_list
 
 
-def run_map_red(cluster_id, map_func, reduce_func, path):
+def run_map_red(cluster_id, map_func, reduce_func, path, worker_addresses):
     log.write("Map reduce started")
-    run_map_chunks(cluster_id, map_func, reduce_func, path )
+    run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses )
 
 
 def create_mapper_data(path, cluster_id=0):
@@ -202,7 +202,7 @@ def run_reduce(cluster_id, task_count, map_func, reduce_func):
         save_final_data(key, result.result)
         print(result)
 
-def run_map_chunks(cluster_id, map_func, reduce_func, path):
+def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
     global worker_stubs
     log.write("Dividing data in chunks- START") 
     tasks_count = create_mapper_data(path, cluster_id)
@@ -219,7 +219,8 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path):
         request.map_function = map_func
         
         request.lines.extend(data)
-        random_worker = random.randint(0,1)
+        worker_count = len(worker_addresses)
+        random_worker = random.randint(0,worker_count)
         response = worker_stubs[random_worker].worker_map(request)
         result = list(response.result)
         command_to_store(f'set {cluster_id}:reducer:{i} {result}', INTERMEDIATE_STAGE)
@@ -237,7 +238,7 @@ def run(worker_addresses, store_address, map_func, reduce_func, path):
         connect_worker(item.ip, item.port, store_address)
 
     print('here', 'critical')
-    run_map_red(0, map_func, reduce_func, path)
+    run_map_red(0, map_func, reduce_func, path, worker_addresses)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Worker for the map reduce')
