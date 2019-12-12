@@ -184,7 +184,7 @@ def create_mapper_data(path, cluster_id=0):
                     not_done = False
         return task_count
 
-    # log.write('MAP TASK COMLETE2', 'critical')
+    log.write('Create mapper data complete')
 
 def run_reduce(cluster_id, task_count, map_func, reduce_func):
     global worker_stubs
@@ -220,6 +220,7 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
         
         request.lines.extend(data)
         worker_count = len(worker_stubs)
+        log.write(f'worker count {worker_count}')
         random_worker = random.randint(0,worker_count - 1)
         response = worker_stubs[random_worker].worker_map(request)
         result = list(response.result)
