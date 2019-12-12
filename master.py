@@ -47,7 +47,6 @@ log = Dependencies.log()
 
 clusters = collections.defaultdict(list)
 processes = collections.defaultdict(list)
-worker_stubs = collections.defaultdict(list)
 store_stub = None
 worker_stubs = []
 store_stub = None
@@ -64,8 +63,9 @@ def connect_worker(ip, port, store_address):
     global worker_stubs
     channel = grpc.insecure_channel(f'{ip}:{port}')
     worker_stub =  worker_pb2_grpc.WorkerStub(channel)
-    worker_stub.connect_to_store(store_address)
     worker_stubs.append(worker_stub)
+    worker_stub.connect_to_store(store_address)
+    time.sleep(10)
     log.write(f'Master connected to worker at {ip}:{port}', 'debug')
     
 def command_to_store(value, stage = INITIAL_STAGE):
@@ -219,8 +219,8 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
         request.map_function = map_func
         
         request.lines.extend(data)
-        worker_count = len(worker_addresses)
-        random_worker = random.randint(0,worker_count)
+        worker_count = len(worker_stubs)
+        random_worker = random.randint(0,worker_count - 1)
         response = worker_stubs[random_worker].worker_map(request)
         result = list(response.result)
         command_to_store(f'set {cluster_id}:reducer:{i} {result}', INTERMEDIATE_STAGE)
