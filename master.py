@@ -60,12 +60,12 @@ def connect_datastore(address):
 
 
 def connect_worker(ip, port, store_address):
+    log.write(f'Connecting to worker at {ip}:{port}')
     global worker_stubs
     channel = grpc.insecure_channel(f'{ip}:{port}')
     worker_stub =  worker_pb2_grpc.WorkerStub(channel)
     worker_stubs.append(worker_stub)
     worker_stub.connect_to_store(store_address)
-    time.sleep(10)
     log.write(f'Master connected to worker at {ip}:{port}', 'debug')
     
 def command_to_store(value, stage = INITIAL_STAGE):
