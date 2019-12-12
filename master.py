@@ -40,6 +40,8 @@ class MasterServicer(master_pb2_grpc.MasterServicer):
         log.write("STARTING MAP REDUCE AT MASTER")
         response = master_pb2.final_response()
         response.data = "1"
+        log.write('request to Master Servicer run_map_reduce')
+        log.write(request)
         run(request.workers, request.store, request.map_f, request.reduce_f, request.path)
         return response
 
@@ -234,13 +236,12 @@ def run_map_chunks(cluster_id, map_func, reduce_func, path, worker_addresses):
 
 
 def run(worker_addresses, store_address, map_func, reduce_func, path):
-    
+    log.write(f'Lenght of worker_adress {len(worker_addresses)}')
     global store_stub
     connect_datastore(store_address)
     for item in worker_addresses:
         connect_worker(item.ip, item.port, store_address)
 
-    print('here', 'critical')
     run_map_red(0, map_func, reduce_func, path, worker_addresses)
 
 if __name__ == "__main__":
